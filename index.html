@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JS Calculator</title>
+    <link rel="stylesheet" href="styles/index.css" >
+</head>
+<body>
+
+    <h1 style="color: white;">JS Calculator</h1>
+
+    <div class="calculator">
+        <div class="output">
+            <span id="display" class="result">0</span>
+        </div>
+        <div class="buttons">
+            <button onclick="appendNumber('1')">1</button>
+            <button onclick="appendNumber('2')">2</button>
+            <button onclick="appendNumber('3')">3</button>
+            <button class="op-btn" onclick="setOperation('+')">+</button>
+            
+            <button onclick="appendNumber('4')">4</button>
+            <button onclick="appendNumber('5')">5</button>
+            <button onclick="appendNumber('6')">6</button>
+            <button class="op-btn" onclick="setOperation('-')">-</button>
+            
+            <button onclick="appendNumber('7')">7</button>
+            <button onclick="appendNumber('8')">8</button>
+            <button onclick="appendNumber('9')">9</button>
+            <button class="op-btn" onclick="setOperation('*')">*</button>
+            
+            <button class="bg-red" onclick="clearDisplay()">C</button>
+            <button onclick="appendNumber('0')">0</button>
+            <button class="bg-green" onclick="calculate()">=</button>
+            <button class="op-btn" onclick="setOperation('/')">/</button>
+        </div>
+    </div>
+
+    <script>
+        let currentInput = "";
+        let previousInput = "";
+        let operation = null;
+        const displayElement = document.getElementById("display");
+
+        function updateDisplay() {
+            displayElement.innerText = currentInput || "0";
+        }
+
+        function appendNumber(number) {
+            // Prevent multiple leading zeros
+            if (number === '0' && currentInput === '0') return;
+            currentInput = currentInput.toString() + number.toString();
+            updateDisplay();
+        }
+
+        function setOperation(op) {
+            if (currentInput === "") return;
+            if (previousInput !== "") calculate(); // Chain calculations
+            
+            operation = op;
+            previousInput = currentInput;
+            currentInput = "";
+        }
+
+        function clearDisplay() {
+            currentInput = "";
+            previousInput = "";
+            operation = null;
+            updateDisplay();
+        }
+
+        function calculate() {
+            let result;
+            const prev = parseFloat(previousInput);
+            const current = parseFloat(currentInput);
+
+            if (isNaN(prev) || isNaN(current)) return;
+
+            switch (operation) {
+                case '+': result = prev + current; break;
+                case '-': result = prev - current; break;
+                case '*': result = prev * current; break;
+                case '/': 
+                    result = current !== 0 ? prev / current : "Error";
+                    break;
+                default: return;
+            }
+
+            currentInput = result;
+            operation = null;
+            previousInput = "";
+            updateDisplay();
+        }
+    </script>
+</body>
+</html>
